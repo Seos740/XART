@@ -22,7 +22,9 @@ int xart_main() {
     __SCHAR_MAX__ KERNEL_TYPE = ($KernelParam, 3, 2);
 
     if(KERNEL_TYPE = 'XART') {
-        uefi_load_file("/Boot/EFI/XART/kernel_init.efi")
+        uefi_load_file("/Boot/EFI/XART/kernel_init.bin", kernel_init.bin)
+    } else if(KERNEL_TYPE = 'U_XART') {
+        uefi_load_file("")
     }
 
     return 0;
