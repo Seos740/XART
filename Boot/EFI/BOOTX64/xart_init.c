@@ -21,11 +21,13 @@ int xart_main() {
 
     __SCHAR_MAX__ KERNEL_TYPE = ($KernelParam, 3, 2);
 
-    if(KERNEL_TYPE = 'XART') {
-        uefi_load_file("/Boot/EFI/XART/kernel_init.bin", kernel_init.bin)
-    } else if(KERNEL_TYPE = 'U_XART') {
-        uefi_load_file("")
-    }
+    if (StrCmp(KERNEL_TYPE, L"XART") == 0) {
+        uefi_load_file(ImageHandle, L"\\Boot\\EFI\\XART\\kernel_init.bin", &myFile);
+    } else if (StrCmp(KERNEL_TYPE, L"U_XART") == 0) {
+        uefi_load_file(ImageHandle, L"\\Boot\\EFI\\U_XART\\kernel_init.bin", &myFile);
+    } else {
+        return EFI_UNSUPPORTED; 
+    }    
 
     return 0;
 }
