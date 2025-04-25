@@ -1,24 +1,68 @@
-#define LONG 127
+#define LONG int
 #define DLONG 255
 #define QDLONG 511
+#define MAX_PROC 16384 // Max proccess the system allows for
 
+// Process info struct
+struct sys_proc {
+    LONG proc_name;
+    LONG mem_start_addr_page;
+    LONG mem_end_addr_page;
+};
+
+// Global process table struct
+struct GLOBAL_PROC_TABLE {
+    int CURRENT_LATEST_PROC;
+    struct sys_proc sys_list[MAX_PROC];  // pid 1 = sys_list[0], pid 2 = sys_list[1], etc.
+};
+
+// Global instance
+struct GLOBAL_PROC_TABLE GPT;
+
+// Initialize process table
 int GLOBAL_PROC_TABLE_SETUP() {
-    struct GLOBAL_PROC_TABLE {
-        int CURRENT_LATEST_PROC;  // Assuming 32-bit int for CURRENT_LATEST_PROC
-        
-        struct sys_1 {
-            LONG proc_name;                // Process name (probably an identifier)
-            LONG mem_start_addr_page;      // Memory start address in pages
-            LONG mem_end_addr_page;        // Memory end address in pages
-        } kernel_proc;  // This struct holds kernel process-related data
-    };
+    GPT.CURRENT_LATEST_PROC = 1;
 
-    // Initialize the struct
-    struct GLOBAL_PROC_TABLE gpt;
-    gpt.CURRENT_LATEST_PROC = 1;  // Set the latest process ID to 1
-    gpt.kernel_proc.proc_name = 1;  // Use an integer ID for the process name (or other identifier)
-    gpt.kernel_proc.mem_start_addr_page = 0;
-    gpt.kernel_proc.mem_end_addr_page = 31250;  // As per your original comment
+    // Setup PID 1 (sys_1)
+    GPT.sys_list[0].proc_name = 1;
+    GPT.sys_list[0].mem_start_addr_page = 0;
+    GPT.sys_list[0].mem_end_addr_page = 31250;
 
     return 0;
+}
+
+// Register next process
+int GLOBAL_REGISTER_PROC(LONG *proc_name, LONG *Mem_start_addr, LONG *Malloc_length_pages) {
+    // Increment PID
+    int new_pid = GPT.CURRENT_LATEST_PROC + 1;
+
+    if (new_pid > MAX_PROC)
+        return -1; // No more space
+
+    GPT.CURRENT_LATEST_PROC = new_pid;
+
+    int index = new_pid - 1;  // sys_1 = index 0
+
+    GPT.sys_list[index].proc_name = *proc_name;
+    GPT.sys_list[index].mem_start_addr_page = *Mem_start_addr;
+    GPT.sys_list[index].mem_end_addr_page = *Mem_start_addr + *Malloc_length_pages;
+
+    return new_pid;
+}
+
+int GLOBAL_CHECK_BOUNDS(LONG *pid, LONG *mem_addr) {
+    // Safety check
+    if (*pid <= 0 || *pid > GPT.CURRENT_LATEST_PROC) {
+        return -1; // Invalid PID
+    }
+
+    // Get process from table
+    struct sys_proc *p = &GPT.sys_list[*pid - 1];
+
+    // Check if address is within bounds
+    if (*mem_addr >= p->mem_start_addr_page && *mem_addr < p->mem_end_addr_page) {
+        return 1;  // In bounds
+    }
+
+    return 0;  // Out of bounds
 }
