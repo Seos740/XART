@@ -3,6 +3,13 @@
 int SYS_KERNEL_MAIN() {
     // Put some code here
     fat32_init;
+    GLOBAL_PROC_TABLE_SETUP();
+
+}
+
+int SYS_START_DAEMONS() {
+
+    load_file("/Boot/EFI/Bootloaders/XART/daemons/bitmap_renderd.bin", 65536, 65536); // Buffer and File size of 65,536 (~64KB) for bitmap render agent
 
 }
 

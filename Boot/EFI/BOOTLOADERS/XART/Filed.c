@@ -5,7 +5,7 @@
 #define MAX_PATH_PARTS 8
 #define MAX_FILENAME_LEN 11
 
-// === YOU MUST IMPLEMENT THIS ===
+// === I MUST IMPLEMENT THIS ===
 extern int read_sector(uint32_t lba, void* buffer);
 
 // === INTERNAL BUFFERS ===
