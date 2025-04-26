@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+	<dict>
+		<!-- General Kernel Information -->
+		<key>KernelName</key>
+		<string>XART</string>
+		<key>KernelVersion</key>
+		<string>1.0.0</string>
+		<key>KernelType</key>
+		<string>XART</string>
+		<key>KernelArchitecture</key>
+		<string>x86_64</string>
+		<key>KernelReleaseDate</key>
+		<string>2025-04-25</string>
+		<!-- Copyright Information -->
+		<key>Copyright</key>
+		<string>Copyright (C) 2025 XART Kernel Project. All rights reserved.</string>
+		<key>License</key>
+		<string>GPLv3</string>
+		<key>Maintainer</key>
+		<string>Stanley Dickson &lt;stanley.dickson@example.com&gt;</string>
+		<!-- Version Information -->
+		<key>Version</key>
+		<string>1.0.0</string>
+		<key>ReleaseType</key>
+		<string>Alpha</string>
+		<key>BuildNumber</key>
+		<string>00000001</string>
+		<key>ReleaseNotes</key>
+		<string>Initial alpha release of XART Kernel Project.</string>
+		<!-- UEFI Compatibility -->
+		<key>UEFICompatible</key>
+		<true/>
+		<!-- Build Information -->
+		<key>BuildMachine</key>
+		<string>dev-machine-xyz</string>
+		<key>Compiler</key>
+		<string>GCC 10.2.0</string>
+		<!-- Additional Info -->
+		<key>SupportsU_XART</key>
+		<false/>
+		<key>SupportsXART</key>
+		<true/>
+	</dict>
+</plist>
