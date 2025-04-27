@@ -3,6 +3,7 @@
 int SYS_KERNEL_MAIN() {
     // Put some code here
     fat32_init;
+    
     GLOBAL_PROC_TABLE_SETUP();
 
 }

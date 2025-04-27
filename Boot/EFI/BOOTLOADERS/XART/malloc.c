@@ -2,6 +2,8 @@
 #define xart_gpf -1
 #define xart_unknown_ptr -2
 
+// TODO: Implement avaliable memory checking here
+
 int malloc(__CHAR32_TYPE__ *pages, __CHAR16_TYPE__ *page_size_bytes, __CHAR32_TYPE__ *start_page, __CHAR16_TYPE__ *pid) {
 
     // Page size check
