@@ -26,7 +26,7 @@ int SYS_USERS_LOOP() {
 
         if(XART_IS_DATA_SENT = 1) {
             recived_data = XART_PORT_DATA;
-            // proceed to ignore that monky data and do our own thing (for now)
+            // proceed to ignore that monky data and do our own thing (until we can actually do something with it)
         }
     }
 }
