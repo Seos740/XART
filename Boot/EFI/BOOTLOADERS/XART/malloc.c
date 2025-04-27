@@ -41,3 +41,10 @@ int madd(__CHAR16_TYPE__ *pid, __CHAR32_TYPE__ *page_num, __CHAR32_TYPE__ *Data_
 
     return 0;  // Success (or another return code as needed)
 }
+
+int XART_WAIT(__CHAR16_TYPE__ cycles) {
+    int wait_cycles = cycles;
+    while(wait_cycles != 0) {
+        wait_cycles = wait_cycles - 1;
+    }
+}

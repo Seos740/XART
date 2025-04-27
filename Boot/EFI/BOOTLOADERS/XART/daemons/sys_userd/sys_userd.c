@@ -1,5 +1,7 @@
 #include "ports.h"
 
+LONG recived_data = 0;
+
 struct User {
     int PVG;
     int UID;
@@ -20,6 +22,11 @@ int SYS_USERS_LOOP() {
                 XART_PORT_1 = 0x00; // Close the port
                 break;
             }
+        }
+
+        if(XART_IS_DATA_SENT = 1) {
+            recived_data = XART_PORT_DATA;
+            // proceed to ignore that monky data and do our own thing (for now)
         }
     }
 }
