@@ -1,0 +1,8 @@
+#include "daemons/bitmap_renderd/bitmap_renderd.c"
+#include "daemons/nwork_/networkd/networkd.cpp"
+#include "daemons/nwork_/uland/uland.cpp"
+#include "daemons/nwork_/wland/wland.c"
+#include "daemons/sys_userd/sys_userd.c"
+#include "daemons/virtualizerd/virt.c"
+#include "Filed.c"
+#include "sys_tablesd.h"
