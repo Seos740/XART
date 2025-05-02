@@ -1,5 +1,7 @@
 #include "malloc.c"
 
+#include "XART_ERRORS.c"
+
 #define uint32_t __CHAR32_TYPE__
 #define uint64_t LONG
 
@@ -285,8 +287,15 @@ uint64_t syscall_handler(uint64_t syscall_num, uint64_t arg) {
         return arg + 1406;
     }
     if (syscall_num == 70) {
-        // sys_70 implementation
-        return arg + 1407;
+        // malloc
+        LONG checkerd = GPT.CURRENT_LATEST_PROC - 1;
+        LONG latest_mem_page = GPT.sys_list[checkerd + 1].mem_end_addr_page;
+
+        if(latest_mem_page = 0) {
+            return xart_mem_err;
+        }
+
+        malloc(arg, 4096, latest_mem_page, 50); // 50 = defualt user proccess
     }
     if (syscall_num == 71) {
         // sys_71 implementation

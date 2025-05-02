@@ -48,3 +48,7 @@ int XART_WAIT(__CHAR16_TYPE__ cycles) {
         wait_cycles = wait_cycles - 1;
     }
 }
+
+int GET_EARLIEST_AVALIABLE_MEMORY() {
+    
+}
