@@ -7,8 +7,8 @@
 
 uint64_t syscall_handler(uint64_t syscall_num, uint64_t arg) {
     if (syscall_num == 0) {
-        // sys_0 implementation
-        return arg + 1337;
+        // fork implementation
+        
     }
     if (syscall_num == 1) {
         // sys_1 implementation
@@ -295,7 +295,8 @@ uint64_t syscall_handler(uint64_t syscall_num, uint64_t arg) {
             return xart_mem_err;
         }
 
-        malloc(arg, 4096, latest_mem_page, 50); // 50 = defualt user proccess
+        int response = malloc(arg, 4096, latest_mem_page, 50); // 50 = defualt user proccess
+        return response;
     }
     if (syscall_num == 71) {
         // sys_71 implementation
