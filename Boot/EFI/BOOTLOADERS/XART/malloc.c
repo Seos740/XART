@@ -1,54 +1,102 @@
 #include "sys_tablesd.h"
-#define xart_gpf -1
-#define xart_unknown_ptr -2
+#include "XART_ERRORS.c"
 
-// TODO: Implement avaliable memory checking here
+#define __CHAR32_TYPE __CHAR32_TYPE__
+#define __CHAR16_TYPE __CHAR16_TYPE__
 
-int malloc(__CHAR32_TYPE__ *pages, __CHAR16_TYPE__ *page_size_bytes, __CHAR32_TYPE__ *start_page, __CHAR16_TYPE__ *pid) {
+#define PAGE_SIZE_BYTES 4096
 
-    // Page size check
-    if (*page_size_bytes == 0) {
-        *page_size_bytes = 4096;  // Default page size in bytes
+#define MAX_ALLOCATIONS 1024
+
+__CHAR32_TYPE memory_bitmap[MAX_ALLOCATIONS];
+
+__CHAR32_TYPE memory_allocations[MAX_ALLOCATIONS];
+
+__CHAR32_TYPE total_memory = 0;
+__CHAR32_TYPE free_memory = 0;
+
+void init_memory_system(__CHAR32_TYPE total_pages, __CHAR32_TYPE page_size_bytes) {
+    total_memory = total_pages * page_size_bytes;
+    free_memory = total_memory;
+
+    for (__CHAR32_TYPE i = 0; i < MAX_ALLOCATIONS; i++) {
+        memory_bitmap[i] = 0;
     }
-
-    // Convert pages to bytes
-    __CHAR32_TYPE__ TOTAL_MALLOC_BYTES = *pages * *page_size_bytes;
-    __CHAR32_TYPE__ STARTING_BYTE = *start_page * *page_size_bytes;
-
-    // Get the start pointer
-    __CHAR32_TYPE__* start_pointer = (__CHAR32_TYPE__*)STARTING_BYTE;
-
-    // Code here to send the data to the GPC (global process table)
-
-    return (int)start_pointer;  // Return the start pointer cast to an integer (if needed)
 }
 
-int madd(__CHAR16_TYPE__ *pid, __CHAR32_TYPE__ *page_num, __CHAR32_TYPE__ *Data_add) {
+int malloc_memory(__CHAR32_TYPE pages, __CHAR32_TYPE page_size_bytes, __CHAR32_TYPE start_page) {
+    if (page_size_bytes == 0) {
+        page_size_bytes = PAGE_SIZE_BYTES;
+    }
 
-    // This code will retrieve the process's allocated memory from the GPC
-    // and add the data at the specified pointer if owned
-    __CHAR16_TYPE__ CanWrite = GLOBAL_CHECK_BOUNDS(pid, page_num);
+    __CHAR32_TYPE total_malloc_bytes = pages * page_size_bytes;
+
+    if (free_memory < total_malloc_bytes) {
+        return xart_no_memory;
+    }
+
+    __CHAR32_TYPE pages_needed = pages;
+    for (__CHAR32_TYPE i = start_page; i < MAX_ALLOCATIONS; i++) {
+        if (memory_bitmap[i] == 0) {
+            memory_bitmap[i] = 1;
+            memory_allocations[i] = i * page_size_bytes;
+
+            free_memory -= page_size_bytes;
+            pages_needed--;
+
+            if (pages_needed == 0) {
+                return (int)(memory_allocations[i]);
+            }
+        }
+    }
+
+    return xart_no_memory;
+}
+
+int free_memory_block(__CHAR32_TYPE ptr) {
+    for (__CHAR32_TYPE i = 0; i < MAX_ALLOCATIONS; i++) {
+        if (memory_allocations[i] == ptr) {
+            if (memory_bitmap[i] == 1) {
+                memory_bitmap[i] = 0;
+                free_memory += PAGE_SIZE_BYTES;
+                return 0;
+            } else {
+                return xart_invalid_free;
+            }
+        }
+    }
+
+    return xart_unknown_ptr;
+}
+
+int madd(__CHAR16_TYPE *pid, __CHAR32_TYPE *page_num, __CHAR32_TYPE *Data_add) {
+    __CHAR16_TYPE CanWrite = GLOBAL_CHECK_BOUNDS(pid, page_num);
 
     if (CanWrite == 1) {
-        // Code to write data at the memory address
-        LONG* MemAddrToWrite = (LONG*)(*page_num * 4096);  // Ensure it's a pointer
-        *MemAddrToWrite = *Data_add;  // Write data to the address
+        __CHAR32_TYPE* MemAddrToWrite = (__CHAR32_TYPE*)(*page_num * PAGE_SIZE_BYTES);
+        *MemAddrToWrite = *Data_add;
     } else if (CanWrite == 0) {
-        return xart_gpf;  // XART general protection fault
+        return xart_gpf;
     } else if (CanWrite == -1) {
-        return xart_unknown_ptr;  // Invalid pointer
+        return xart_unknown_ptr;
     }
 
-    return 0;  // Success (or another return code as needed)
+    return 0;
 }
 
-int XART_WAIT(__CHAR16_TYPE__ cycles) {
+int XART_WAIT(__CHAR16_TYPE cycles) {
     int wait_cycles = cycles;
-    while(wait_cycles != 0) {
-        wait_cycles = wait_cycles - 1;
+    while (wait_cycles != 0) {
+        wait_cycles--;
     }
+    return 0;
 }
 
-int GET_EARLIEST_AVALIABLE_MEMORY() {
-    
+int GET_EARLIEST_AVAILABLE_MEMORY() {
+    for (__CHAR32_TYPE i = 0; i < MAX_ALLOCATIONS; i++) {
+        if (memory_bitmap[i] == 0) {
+            return (int)(memory_allocations[i]);
+        }
+    }
+    return xart_no_memory;
 }
