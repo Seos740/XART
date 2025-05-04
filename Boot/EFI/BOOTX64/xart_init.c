@@ -30,6 +30,9 @@ int xart_main() {
     }    
 
     return 0;
+
+    ExitBootServices();
+
 }
 
 typedef struct {

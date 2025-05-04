@@ -47,7 +47,6 @@ EFI_STATUS efi_main(EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable) {
         uefi_halt();
     }
 
-    // Exit boot services
     UINTN map_size = 0, map_key, desc_size;
     UINT32 desc_ver;
     gBS->GetMemoryMap(&map_size, NULL, &map_key, &desc_size, &desc_ver);
@@ -55,11 +54,10 @@ EFI_STATUS efi_main(EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable) {
     EFI_MEMORY_DESCRIPTOR *map;
     gBS->AllocatePool(EfiLoaderData, map_size, (void**)&map);
     gBS->GetMemoryMap(&map_size, map, &map_key, &desc_size, &desc_ver);
-    gBS->ExitBootServices(ImageHandle, map_key);
 
     // Jump to kernel
     void (*kernel_entry)(void) = ((__attribute__((sysv_abi)) void(*)(void))kernel_address);
     kernel_entry();
 
-    return EFI_SUCCESS; // We should never return here.
+    return EFI_SUCCESS; // We will never return here.
 }
