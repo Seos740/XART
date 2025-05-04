@@ -5,7 +5,7 @@
 #define uint32_t __CHAR32_TYPE__
 #define uint64_t LONG
 
-uint64_t syscall_handler(uint64_t syscall_num, uint64_t arg) {
+uint64_t syscall_handler(uint64_t syscall_num, uint64_t arg, uint64_t arg2) {
     if (syscall_num == 0) {
         // fork implementation
         
@@ -299,8 +299,15 @@ uint64_t syscall_handler(uint64_t syscall_num, uint64_t arg) {
         return response;
     }
     if (syscall_num == 71) {
-        // sys_71 implementation
-        return arg + 1408;
+        // free function implementation
+        LONG freed = arg;
+        if(GPT.sys_list[freed].mem_end_addr_page - arg2 < 0) {
+            return xart_gpf;
+        }
+
+        GPT.sys_list[freed].mem_end_addr_page = GPT.sys_list[freed].mem_end_addr_page - arg2;
+
+        return 0;
     }
     if (syscall_num == 72) {
         // sys_72 implementation
