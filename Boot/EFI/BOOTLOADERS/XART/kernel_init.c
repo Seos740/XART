@@ -12,7 +12,7 @@ int SYS_KERNEL_MAIN() {
 
 int SYS_START_DAEMONS() {
 
-    thread_t* t = create_thread(SYS_USERS_LOOP, (void*)"Hello, thread!");
+    thread_t* t = create_thread(SYS_USERS_LOOP, (void*)" ");
 
 }
 
