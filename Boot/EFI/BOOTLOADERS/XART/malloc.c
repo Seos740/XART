@@ -53,6 +53,9 @@ int malloc_memory(__CHAR32_TYPE pages, __CHAR32_TYPE page_size_bytes, __CHAR32_T
 }
 
 int mwrite(LONG page, LONG data_to_write) {
+
+    // TESTING THE WRITE FUNCTION
+    // TODO: SECURITY BOUNDS CHECKING
     int *malloc_write = (int *)0x12345678;
 
     *malloc_write = data_to_write;
