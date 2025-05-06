@@ -54,11 +54,11 @@ int malloc_memory(__CHAR32_TYPE pages, __CHAR32_TYPE page_size_bytes, __CHAR32_T
 
 int mwrite(LONG page, LONG data_to_write, LONG pid) {
 
-    pagebyte = page * 4096;
+    LONG pagebyte = page * 4096;
 
-    if(page > GPT.sys_list[pid].mem_start_addr_page) {
-        if(page < GPT.sys_list[pid].mem_end_addr_page) {
-            int *malloc_write = (int *)pagebyte;
+    if(page >= GPT.sys_list[pid].mem_start_addr_page) {
+        if(page <= GPT.sys_list[pid].mem_end_addr_page) {
+            LONG *malloc_write = (LONG *)pagebyte;
 
             *malloc_write = data_to_write;
 
