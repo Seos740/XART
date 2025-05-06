@@ -52,15 +52,23 @@ int malloc_memory(__CHAR32_TYPE pages, __CHAR32_TYPE page_size_bytes, __CHAR32_T
     return xart_no_memory;
 }
 
-int mwrite(LONG page, LONG data_to_write) {
+int mwrite(LONG page, LONG data_to_write, LONG pid) {
 
-    // TESTING THE WRITE FUNCTION
-    // TODO: SECURITY BOUNDS CHECKING
-    int *malloc_write = (int *)0x12345678;
+    pagebyte = page * 4096;
 
-    *malloc_write = data_to_write;
+    if(page > GPT.sys_list[pid].mem_start_addr_page) {
+        if(page < GPT.sys_list[pid].mem_end_addr_page) {
+            int *malloc_write = (int *)pagebyte;
 
-    return 0;
+            *malloc_write = data_to_write;
+
+            return xart_success;
+        } else {
+            return xart_gpf;
+        }
+    } else {
+        return xart_gpf;
+    }
 }
 
 int free_memory_block(__CHAR32_TYPE ptr) {
