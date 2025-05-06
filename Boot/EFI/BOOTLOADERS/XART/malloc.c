@@ -1,12 +1,11 @@
-#include "sys_tablesd.h"
-#include "XART_ERRORS.c"
+#include "XART.h"
 
 #define __CHAR32_TYPE __CHAR32_TYPE__
 #define __CHAR16_TYPE __CHAR16_TYPE__
 
 #define PAGE_SIZE_BYTES 4096
 
-#define MAX_ALLOCATIONS 1024
+#define MAX_ALLOCATIONS 65536
 
 __CHAR32_TYPE memory_bitmap[MAX_ALLOCATIONS];
 
@@ -51,6 +50,14 @@ int malloc_memory(__CHAR32_TYPE pages, __CHAR32_TYPE page_size_bytes, __CHAR32_T
     }
 
     return xart_no_memory;
+}
+
+int mwrite(LONG page, LONG data_to_write) {
+    int *malloc_write = (int *)0x12345678;
+
+    *malloc_write = data_to_write;
+
+    return 0;
 }
 
 int free_memory_block(__CHAR32_TYPE ptr) {
@@ -98,5 +105,9 @@ int GET_EARLIEST_AVAILABLE_MEMORY() {
             return (int)(memory_allocations[i]);
         }
     }
-    return xart_no_memory;
+    XART_OOM();
+}
+
+int XART_OOM() {
+
 }
