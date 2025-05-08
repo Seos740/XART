@@ -1,5 +1,11 @@
-#include "XART.h"
+#include "ports.h"
+#include "system_print.c"
+#include "types.h"
+#include "XART_ERRORS.c"
+#include "XART_MATH.c"
+#include "daemons.h"
 
+#define LONG int
 #define __CHAR32_TYPE __CHAR32_TYPE__
 #define __CHAR16_TYPE __CHAR16_TYPE__
 
@@ -54,10 +60,17 @@ int malloc_memory(__CHAR32_TYPE pages, __CHAR32_TYPE page_size_bytes, __CHAR32_T
 
 int mwrite(LONG page, LONG data_to_write, LONG pid) {
 
+    if (GPT.sys_list[pid] == NULL) {
+        return xart_gpf;
+    }
+
     LONG pagebyte = page * 4096;
 
     if(page >= GPT.sys_list[pid].mem_start_addr_page) {
         if(page <= GPT.sys_list[pid].mem_end_addr_page) {
+
+            
+
             LONG *malloc_write = (LONG *)pagebyte;
 
             *malloc_write = data_to_write;
@@ -120,5 +133,5 @@ int GET_EARLIEST_AVAILABLE_MEMORY() {
 }
 
 int XART_OOM() {
-
+    GLOBAL_KILL_PROC_NEWEST();
 }
